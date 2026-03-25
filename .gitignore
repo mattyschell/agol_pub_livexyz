@@ -1,0 +1,10 @@
+scratch/*
+*/logs/*
+.pyc
+*__pycache__*
+test-*.bat
+*.pyc
+dev-*
+stg-*
+prd-*
+*local.*
