@@ -8,3 +8,4 @@ dev-*
 stg-*
 prd-*
 *local.*
+*.json
