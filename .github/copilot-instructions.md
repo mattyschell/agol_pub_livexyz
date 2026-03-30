@@ -28,3 +28,7 @@ by the API or necessary to avoid ambiguity.
 Avoid keyword arguments (kwargs) in function/method calls and definitions. Prefer positional arguments instead, except when a function/API *requires* keywords (e.g., many stdlib/framework calls) or when omitting keywords would materially harm clarity.
 
 If keywords are required, keep them minimal and follow the line-wrapping + leading-comma style. Do not introduce new optional parameters as keywords unless explicitly requested.
+
+## Scripting
+
+Do not generate PowerShell scripts for commit to the repository. All repository code should be Python, Windows command, or git bash shell unless requested otherwise.

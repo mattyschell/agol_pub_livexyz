@@ -4,6 +4,19 @@ from datetime import datetime, timedelta
 import base64
 
 
+def _normalize_token(token):
+    """Normalize token text copied from env vars or docs."""
+    if token is None:
+        return None
+
+    clean = str(token).strip()
+    if clean.startswith('"') and clean.endswith('"'):
+        clean = clean[1:-1].strip()
+    if clean.lower().startswith("bearer "):
+        clean = clean[7:].strip()
+    return clean
+
+
 class GraphQLFetcher:
     """
     Base class for fetching data from a GraphQL API.
@@ -54,6 +67,8 @@ class LiveXYZFetcher(GraphQLFetcher):
         """
         if endpoint is None:
             endpoint = "https://graphql-enki.liveapp.com/features/648b1584fe16016869b2415a"
+
+        token = _normalize_token(token)
         
         super().__init__(endpoint
                         ,{"X-Auth-Token": f"Bearer {token}"})
@@ -152,11 +167,13 @@ class LiveXYZFetcher(GraphQLFetcher):
 
                 # Get the cursor for the next page
                 cursor = data.get('data', {}).get('features', {}).get('pageInfo', {}).get('cursor')
-                print(f"Next cursor: {cursor}")
+                # print(f"Next cursor: {cursor}")
 
                 # If there is no cursor, it means we have reached the last page
                 if not cursor:
                     break
             else:
                 print(f"Request failed with status code: {response.status_code}")
+                if response.text:
+                    print(response.text[:500])
                 break
