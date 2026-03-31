@@ -1,0 +1,82 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36" version="29.6.6">
+  <diagram name="Page-1" id="W8A88RqiT63f8hZP_JzY">
+    <mxGraphModel dx="1426" dy="789" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="zZc-atfyfXBpznImNKL6-19" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="435" width="720" x="50" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="zZc-atfyfXBpznImNKL6-21" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="380" width="460" x="290" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="zZc-atfyfXBpznImNKL6-1" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" value="" vertex="1">
+          <mxGeometry height="130" width="140" x="350" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="zZc-atfyfXBpznImNKL6-3" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="LiveXYZ_Source_Blue" vertex="1">
+          <mxGeometry height="30" width="60" x="390" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="zZc-atfyfXBpznImNKL6-5" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" value="" vertex="1">
+          <mxGeometry height="130" width="140" x="560" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="zZc-atfyfXBpznImNKL6-4" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="LiveXYZ_Source_Green&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="600" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="zZc-atfyfXBpznImNKL6-8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="60" width="145" x="350" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="zZc-atfyfXBpznImNKL6-9" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="LiveXYZ_View" vertex="1">
+          <mxGeometry height="30" width="60" x="392.5" y="155" as="geometry" />
+        </mxCell>
+        <mxCell id="zZc-atfyfXBpznImNKL6-10" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="60" width="155" x="555" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="zZc-atfyfXBpznImNKL6-11" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="LiveXYZ_History_View" vertex="1">
+          <mxGeometry height="30" width="60" x="602.5" y="155" as="geometry" />
+        </mxCell>
+        <mxCell id="zZc-atfyfXBpznImNKL6-12" edge="1" parent="1" source="zZc-atfyfXBpznImNKL6-1" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.564;exitY=-0.015;exitDx=0;exitDy=0;exitPerimeter=0;" target="zZc-atfyfXBpznImNKL6-10" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="510" y="440" as="sourcePoint" />
+            <mxPoint x="560" y="390" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="zZc-atfyfXBpznImNKL6-13" edge="1" parent="1" source="zZc-atfyfXBpznImNKL6-1" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="zZc-atfyfXBpznImNKL6-8" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="510" y="440" as="sourcePoint" />
+            <mxPoint x="560" y="390" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="zZc-atfyfXBpznImNKL6-16" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="validityTime.end" vertex="1">
+          <mxGeometry height="30" width="60" x="320" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="zZc-atfyfXBpznImNKL6-17" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Not&lt;div&gt;Null&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="410" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="zZc-atfyfXBpznImNKL6-18" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Null" vertex="1">
+          <mxGeometry height="30" width="60" x="540" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="zZc-atfyfXBpznImNKL6-20" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="NYCMaps ArcGIS Online" vertex="1">
+          <mxGeometry height="30" width="150" x="350" y="65" as="geometry" />
+        </mxCell>
+        <mxCell id="zZc-atfyfXBpznImNKL6-22" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="LiveXYZ Group" vertex="1">
+          <mxGeometry height="30" width="120" x="470" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="zZc-atfyfXBpznImNKL6-23" edge="1" parent="1" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;fillColor=default;" target="zZc-atfyfXBpznImNKL6-5" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="630" y="600" as="sourcePoint" />
+            <mxPoint x="650" y="610" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="zZc-atfyfXBpznImNKL6-24" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;" value="" vertex="1">
+          <mxGeometry height="80" width="80" x="590" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="zZc-atfyfXBpznImNKL6-25" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="LiveXYZ API" vertex="1">
+          <mxGeometry height="30" width="60" x="600" y="595" as="geometry" />
+        </mxCell>
+        <mxCell id="zZc-atfyfXBpznImNKL6-26" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Next Refresh" vertex="1">
+          <mxGeometry height="30" width="90" x="630" y="540" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

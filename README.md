@@ -6,8 +6,23 @@ Publish [LiveXYZ](https://www.livexyz.com/) data to the NYCMaps ArcGIS Online or
 
 1. TBD
 
-### Download a sample of Current LiveXYZ data
+### Download LiveXYZ Data
 
-1. Copy sample-fetch-sample.bat to a new name.  
+We fetch all data, including historical records, and sort it out later when publishing. 
+
+For all of the dataset.
+
+1. Copy sample-fetch-all.bat to a new name.  
 2. Get a key from [LiveXYZ](https://directory.livexyz.com/places).  
-3. Update the first 4 environmentals and run the script. 
+3. Update environmentals at the top of the script.
+
+To fetch a sample of the dataset use sample-fetch-sample.bat
+
+### ArcGIS Online: The Tentative Plan
+
+![ArcGIS Online tentative plan](doc/sketch.png)
+
+
+
+
+
