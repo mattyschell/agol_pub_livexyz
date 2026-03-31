@@ -1,7 +1,12 @@
 import requests
 import json
+import logging
+import time
 from datetime import datetime, timedelta
 import base64
+
+
+LOGGER = logging.getLogger(__name__)
 
 
 def _normalize_token(token):
@@ -141,6 +146,68 @@ class LiveXYZFetcher(GraphQLFetcher):
             self.token = self._refresh_jwt_token(self.token)
             self.headers["X-Auth-Token"] = f"Bearer {self.token}"
 
+    def _fetch_with_retry(self
+                         ,payload
+                         ,max_retries=3
+                         ,backoff_factor=1.0):
+        """
+        Fetch with retry logic for transient errors.
+
+        :param payload: Request payload
+        :param max_retries: Maximum number of retries
+        :param backoff_factor: Base backoff multiplier (exponential)
+        :return: Response object
+        """
+        transient_status_codes = {408, 429, 500, 502, 503, 504}
+
+        for attempt in range(max_retries + 1):
+            try:
+                response = self.fetch(payload)
+
+                if response.status_code in transient_status_codes:
+                    if attempt < max_retries:
+                        wait_time = backoff_factor * (2 ** attempt)
+                        LOGGER.warning(
+                            "Transient error %d on attempt %d/%d. "
+                            "Retrying in %.1f seconds..."
+                            ,response.status_code
+                            ,attempt + 1
+                            ,max_retries + 1
+                            ,wait_time
+                        )
+                        time.sleep(wait_time)
+                        continue
+                    else:
+                        LOGGER.error(
+                            "Transient error %d persisted after %d retries"
+                            ,response.status_code
+                            ,max_retries + 1
+                        )
+
+                return response
+
+            except Exception as e:
+                if attempt < max_retries:
+                    wait_time = backoff_factor * (2 ** attempt)
+                    LOGGER.warning(
+                        "Request exception on attempt %d/%d: %s. "
+                        "Retrying in %.1f seconds..."
+                        ,attempt + 1
+                        ,max_retries + 1
+                        ,str(e)
+                        ,wait_time
+                    )
+                    time.sleep(wait_time)
+                else:
+                    LOGGER.error(
+                        "Request exception persisted after %d retries: %s"
+                        ,max_retries + 1
+                        ,str(e)
+                    )
+                    raise
+
+        return response
+
     def fetch_paginated(self
                        ,base_payload
                        ,page_size=1000):
@@ -159,7 +226,7 @@ class LiveXYZFetcher(GraphQLFetcher):
             payload["pageSize"] = page_size
             payload["cursor"] = cursor
 
-            response = self.fetch(payload)
+            response = self._fetch_with_retry(payload)
 
             if response.status_code == 200:
                 data = response.json()
@@ -173,7 +240,56 @@ class LiveXYZFetcher(GraphQLFetcher):
                 if not cursor:
                     break
             else:
-                print(f"Request failed with status code: {response.status_code}")
+                LOGGER.error(
+                    "Request failed with status code: %d"
+                    ,response.status_code
+                )
                 if response.text:
-                    print(response.text[:500])
+                    LOGGER.error(
+                        "Response body: %s"
+                        ,response.text[:500]
+                    )
                 break
+
+    def iter_pages(self
+                  ,base_payload
+                  ,page_size=1000
+                  ,max_pages=None):
+        """
+        Iterate paginated responses with optional page cap.
+
+        :param base_payload: Base payload dictionary (without pageSize/cursor)
+        :param page_size: Number of items per page
+        :param max_pages: Optional limit on number of pages to iterate
+        :return: Generator yielding page dictionaries
+        """
+        pages_read = 0
+        for page in self.fetch_paginated(base_payload
+                                        ,page_size):
+            yield page
+            pages_read += 1
+            if max_pages is not None and pages_read >= max_pages:
+                break
+
+    def iter_nodes(self
+                  ,base_payload
+                  ,page_size=1000
+                  ,max_pages=None):
+        """
+        Iterate feature nodes across paginated responses.
+
+        :param base_payload: Base payload dictionary (without pageSize/cursor)
+        :param page_size: Number of items per page
+        :param max_pages: Optional limit on number of pages to iterate
+        :return: Generator yielding node dictionaries
+        """
+        for page in self.iter_pages(base_payload
+                                   ,page_size
+                                   ,max_pages):
+            nodes = (
+                page.get("data", {})
+                    .get("features", {})
+                    .get("nodes", [])
+            )
+            for node in nodes:
+                yield node

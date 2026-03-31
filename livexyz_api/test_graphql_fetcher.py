@@ -3,7 +3,11 @@ from unittest.mock import patch, MagicMock
 import json
 import datetime
 import os
-from livexyz_api.graphql_fetcher import GraphQLFetcher, LiveXYZFetcher
+from livexyz_api.graphql_fetcher import (
+    GraphQLFetcher
+    ,LiveXYZFetcher
+    ,_normalize_token
+)
 
 
 class TestGraphQLFetcher(unittest.TestCase):
@@ -62,8 +66,9 @@ class TestLiveXYZFetcher(unittest.TestCase):
     """Tests for LiveXYZFetcher child class."""
 
     def setUp(self):
-        self.token = os.getenv("LIVEXYZTOKEN")
-        self.fetcher = LiveXYZFetcher(self.token)
+        raw_token = os.getenv("LIVEXYZTOKEN")
+        self.token = _normalize_token(raw_token)
+        self.fetcher = LiveXYZFetcher(raw_token)
 
     def test_init_default_endpoint(self):
         """Test initialization with default LiveXYZ endpoint."""

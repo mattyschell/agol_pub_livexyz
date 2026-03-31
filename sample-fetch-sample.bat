@@ -14,7 +14,7 @@ if exist "%PYTHON1%" (
 ) else if exist "%PYTHON2%" (
     set PROPY=%PYTHON2%
 ) 
-CALL %PROPY% livexyz_api/fetch_livexyz_sample.py ^
+CALL %PROPY% livexyz_api/fetch_livexyz.py ^
              --page_count %LINESPERPAGE% ^
              --max_pages %TOTALPAGES% ^
              --output_path %OUTPUT%

@@ -10,3 +10,4 @@ prd-*
 *local.*
 *.json
 *.jsonl
+data/*.csv
