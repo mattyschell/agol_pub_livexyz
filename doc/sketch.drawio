@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36" version="29.6.6">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36">
   <diagram name="Page-1" id="W8A88RqiT63f8hZP_JzY">
     <mxGraphModel dx="1426" dy="789" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -68,13 +68,31 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="zZc-atfyfXBpznImNKL6-24" parent="1" style="whiteSpace=wrap;html=1;aspect=fixed;" value="" vertex="1">
-          <mxGeometry height="80" width="80" x="590" y="570" as="geometry" />
+          <mxGeometry height="90" width="90" x="395" y="610" as="geometry" />
         </mxCell>
         <mxCell id="zZc-atfyfXBpznImNKL6-25" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="LiveXYZ API" vertex="1">
-          <mxGeometry height="30" width="60" x="600" y="595" as="geometry" />
+          <mxGeometry height="30" width="60" x="407.5" y="640" as="geometry" />
         </mxCell>
-        <mxCell id="zZc-atfyfXBpznImNKL6-26" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Next Refresh" vertex="1">
-          <mxGeometry height="30" width="90" x="630" y="540" as="geometry" />
+        <mxCell id="zZc-atfyfXBpznImNKL6-26" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontStyle=3;fontSize=15;" value="Next Refresh" vertex="1">
+          <mxGeometry height="40" width="120" x="460" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="5HdkIA_L0skwzokvqZct-1" parent="1" style="whiteSpace=wrap;html=1;shape=mxgraph.basic.document" value="" vertex="1">
+          <mxGeometry height="50" width="50" x="607.5" y="620" as="geometry" />
+        </mxCell>
+        <mxCell id="5HdkIA_L0skwzokvqZct-2" parent="1" style="verticalLabelPosition=bottom;html=1;verticalAlign=top;align=center;strokeColor=none;fillColor=grey;shape=mxgraph.azure.computer;pointerEvents=1;" value="" vertex="1">
+          <mxGeometry height="140" width="130" x="570" y="600" as="geometry" />
+        </mxCell>
+        <mxCell id="5HdkIA_L0skwzokvqZct-3" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="CSV" vertex="1">
+          <mxGeometry height="30" width="60" x="602.5" y="630" as="geometry" />
+        </mxCell>
+        <mxCell id="5HdkIA_L0skwzokvqZct-5" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="OTI" vertex="1">
+          <mxGeometry height="30" width="60" x="605" y="670" as="geometry" />
+        </mxCell>
+        <mxCell id="5HdkIA_L0skwzokvqZct-6" edge="1" parent="1" source="zZc-atfyfXBpznImNKL6-24" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;entryX=0.015;entryY=0.386;entryDx=0;entryDy=0;entryPerimeter=0;fillColor=default;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="5HdkIA_L0skwzokvqZct-2" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="790" y="660" as="sourcePoint" />
+            <mxPoint x="790" y="540" as="targetPoint" />
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>

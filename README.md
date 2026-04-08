@@ -4,7 +4,10 @@ Publish [LiveXYZ](https://www.livexyz.com/) data to the NYCMaps ArcGIS Online or
 
 ### You will need
 
-1. TBD
+1. ArcGIS Pro installed (ie python _import_ _arcgis_)
+2. API key to [LiveXYZ](https://www.livexyz.com/)
+3. To publish, authentication to an ArcGIS Online organization (see [AGOL_Pub](https://github.com/mattyschell/agol_pub))
+
 
 ### Download LiveXYZ Data
 
