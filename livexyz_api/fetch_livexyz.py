@@ -102,6 +102,8 @@ def _default_output_path(output_format):
 def _to_csv_value(value):
     if value is None:
         return ""
+    if isinstance(value, list) and len(value) == 0:
+        return ""
     if isinstance(value, (dict, list)):
         return json.dumps(value, ensure_ascii=False)
     return value
