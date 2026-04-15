@@ -129,23 +129,69 @@ def _flatten_record(record
     return flat
 
 
-def _ordered_fieldnames(fieldnames):
-    first_columns = [
-        "placeId"
-        ,"name"
-        ,"resolvedName"
-        ,"address"
-        ,"postcode"
-        ,"lat"
-        ,"lon"
-        ,"spaceStatus"
-        ,"placeStatus"
-        ,"hours"
-        ,"tel"
-    ]
-    ordered = [col for col in first_columns if col in fieldnames]
-    ordered += sorted([col for col in fieldnames if col not in ordered])
-    return ordered
+KNOWN_CSV_FIELDNAMES = [
+    "placeId"
+    ,"name"
+    ,"resolvedName"
+    ,"address"
+    ,"postcode"
+    ,"lat"
+    ,"lon"
+    ,"spaceStatus"
+    ,"placeStatus"
+    ,"hours"
+    ,"tel"
+    ,"categories"
+    ,"categoriesPrimary"
+    ,"categoriesPrimary.id"
+    ,"categoriesPrimary.name"
+    ,"chain"
+    ,"chain.chainId"
+    ,"chain.name"
+    ,"chain.urls.website"
+    ,"description"
+    ,"emails"
+    ,"entrances.main.entranceMethod"
+    ,"entrances.main.floor"
+    ,"entrances.main.lat"
+    ,"entrances.main.lon"
+    ,"genericName"
+    ,"genericName.id"
+    ,"genericName.name"
+    ,"isInterior"
+    ,"isMobile"
+    ,"isStorefront"
+    ,"offerings.positive"
+    ,"parent"
+    ,"parent.name"
+    ,"parent.placeId"
+    ,"parent.subcategoriesPrimary"
+    ,"parent.subcategoriesPrimary.id"
+    ,"parent.subcategoriesPrimary.name"
+    ,"placeCreationDate"
+    ,"slug"
+    ,"spaceCreationDate"
+    ,"spaceId"
+    ,"stateId"
+    ,"subcategories"
+    ,"subcategoriesPrimary"
+    ,"subcategoriesPrimary.id"
+    ,"subcategoriesPrimary.name"
+    ,"tags"
+    ,"tagsPrimary"
+    ,"tagsPrimary.id"
+    ,"tagsPrimary.name"
+    ,"urls.contact"
+    ,"urls.facebook"
+    ,"urls.instagram"
+    ,"urls.liveWeb"
+    ,"urls.menu"
+    ,"urls.website"
+    ,"validityTime.end"
+    ,"validityTime.start"
+    ,"verifiedTimes"
+    ,"verifiedTimesLast"
+]
 
 
 def _pages_label(max_pages):
@@ -193,49 +239,57 @@ def _write_csv(fetcher
         ,_pages_label(max_pages)
     )
 
-    rows = []
-    fieldnames = set()
-    nodes_seen = 0
+    nodes_written = 0
+    unknown_fields_warned = set()
 
-    for node in fetcher.iter_nodes(base_payload
-                                  ,page_count
-                                  ,max_pages):
-        row = _flatten_record(node)
-
-        main_entrance = (
-            node.get("entrances", {})
-                .get("main", {})
-        )
-        row["lat"] = main_entrance.get("lat")
-        row["lon"] = main_entrance.get("lon")
-
-        rows.append(row)
-        fieldnames.update(row.keys())
-        nodes_seen += 1
-
-        if nodes_seen % 5000 == 0:
-            LOGGER.info("Prepared %d rows for CSV", nodes_seen)
-
-    ordered_fieldnames = _ordered_fieldnames(fieldnames)
     with open(output_path
              ,"w"
              ,encoding="utf-8"
              ,newline="") as out_f:
         writer = csv.DictWriter(out_f
-                               ,ordered_fieldnames)
+                               ,KNOWN_CSV_FIELDNAMES
+                               ,extrasaction="ignore")
         writer.writeheader()
 
-        for row in rows:
+        for node in fetcher.iter_nodes(base_payload
+                                      ,page_count
+                                      ,max_pages):
+            row = _flatten_record(node)
+
+            main_entrance = (
+                node.get("entrances", {})
+                    .get("main", {})
+            )
+            row["lat"] = main_entrance.get("lat")
+            row["lon"] = main_entrance.get("lon")
+
+            unknown = (
+                row.keys() - set(KNOWN_CSV_FIELDNAMES)
+            )
+            for field in unknown - unknown_fields_warned:
+                LOGGER.warning(
+                    "Unknown field dropped from CSV: %s"
+                    ,field
+                )
+            unknown_fields_warned.update(unknown)
+
             writer.writerow(
                 {
                     key: _to_csv_value(row.get(key))
-                    for key in ordered_fieldnames
+                    for key in KNOWN_CSV_FIELDNAMES
                 }
             )
+            nodes_written += 1
+
+            if nodes_written % 5000 == 0:
+                LOGGER.info(
+                    "Written %d rows to CSV"
+                    ,nodes_written
+                )
 
     LOGGER.info(
         "Written %d rows from %s to %s"
-        ,len(rows)
+        ,nodes_written
         ,_pages_label(max_pages)
         ,output_path
     )
