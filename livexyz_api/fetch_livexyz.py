@@ -67,7 +67,7 @@ def _timestamped_log_path(log_path):
 
 
 def _configure_logging(log_path):
-    handlers = [logging.StreamHandler()]
+    handlers = []
     resolved_log_path = None
 
     if log_path:
@@ -78,6 +78,8 @@ def _configure_logging(log_path):
             logging.FileHandler(resolved_log_path
                                ,encoding="utf-8")
         )
+    else:
+        handlers.append(logging.StreamHandler())
 
     logging.basicConfig(
         level=logging.INFO

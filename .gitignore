@@ -11,3 +11,4 @@ prd-*
 *.json
 *.jsonl
 data/*.csv
+*.code-workspace
