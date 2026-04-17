@@ -5,16 +5,16 @@
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="zZc-atfyfXBpznImNKL6-19" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="" vertex="1">
-          <mxGeometry height="435" width="720" x="50" y="95" as="geometry" />
+          <mxGeometry height="435" width="830" x="90" y="95" as="geometry" />
         </mxCell>
         <mxCell id="zZc-atfyfXBpznImNKL6-21" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="" vertex="1">
-          <mxGeometry height="380" width="460" x="290" y="130" as="geometry" />
+          <mxGeometry height="170" width="390" x="100" y="130" as="geometry" />
         </mxCell>
         <mxCell id="zZc-atfyfXBpznImNKL6-1" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" value="" vertex="1">
-          <mxGeometry height="130" width="140" x="350" y="350" as="geometry" />
+          <mxGeometry height="130" width="140" x="301" y="350" as="geometry" />
         </mxCell>
         <mxCell id="zZc-atfyfXBpznImNKL6-3" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="LiveXYZ_Source_Blue" vertex="1">
-          <mxGeometry height="30" width="60" x="390" y="410" as="geometry" />
+          <mxGeometry height="30" width="60" x="338" y="410" as="geometry" />
         </mxCell>
         <mxCell id="zZc-atfyfXBpznImNKL6-5" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" value="" vertex="1">
           <mxGeometry height="130" width="140" x="560" y="350" as="geometry" />
@@ -23,40 +23,37 @@
           <mxGeometry height="30" width="60" x="600" y="410" as="geometry" />
         </mxCell>
         <mxCell id="zZc-atfyfXBpznImNKL6-8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
-          <mxGeometry height="60" width="180" x="330" y="140" as="geometry" />
+          <mxGeometry height="60" width="180" x="112" y="140" as="geometry" />
         </mxCell>
         <mxCell id="zZc-atfyfXBpznImNKL6-9" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontColor=light-dark(#000000,#66B2FF);" value="&lt;span style=&quot;font-family: &amp;quot;Mona Sans VF&amp;quot;, -apple-system, BlinkMacSystemFont, &amp;quot;Segoe UI&amp;quot;, &amp;quot;Noto Sans&amp;quot;, Helvetica, Arial, sans-serif, &amp;quot;Apple Color Emoji&amp;quot;, &amp;quot;Segoe UI Emoji&amp;quot;; font-size: 14px; text-align: start; background-color: rgb(255, 255, 255);&quot;&gt;LiveXYZ_Storefronts_Today&lt;/span&gt;" vertex="1">
-          <mxGeometry height="30" width="60" x="389.5" y="155" as="geometry" />
+          <mxGeometry height="30" width="60" x="171.5" y="155" as="geometry" />
         </mxCell>
         <mxCell id="zZc-atfyfXBpznImNKL6-10" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
-          <mxGeometry height="60" width="180" x="530" y="140" as="geometry" />
+          <mxGeometry height="60" width="180" x="298" y="140" as="geometry" />
         </mxCell>
         <mxCell id="zZc-atfyfXBpznImNKL6-11" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontColor=light-dark(#000000,#66B2FF);" value="&lt;span style=&quot;font-family: &amp;quot;Mona Sans VF&amp;quot;, -apple-system, BlinkMacSystemFont, &amp;quot;Segoe UI&amp;quot;, &amp;quot;Noto Sans&amp;quot;, Helvetica, Arial, sans-serif, &amp;quot;Apple Color Emoji&amp;quot;, &amp;quot;Segoe UI Emoji&amp;quot;; font-size: 14px; text-align: start; background-color: rgb(255, 255, 255);&quot;&gt;LiveXYZ_Storefronts_AllTime&lt;/span&gt;" vertex="1">
-          <mxGeometry height="30" width="60" x="589.5" y="155" as="geometry" />
+          <mxGeometry height="30" width="60" x="357.5" y="155" as="geometry" />
         </mxCell>
         <mxCell id="zZc-atfyfXBpznImNKL6-12" edge="1" parent="1" source="zZc-atfyfXBpznImNKL6-1" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;" target="zZc-atfyfXBpznImNKL6-10" value="">
           <mxGeometry height="50" relative="1" width="50" as="geometry">
-            <mxPoint x="510" y="440" as="sourcePoint" />
+            <mxPoint x="360" y="350" as="sourcePoint" />
             <mxPoint x="560" y="390" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="zZc-atfyfXBpznImNKL6-13" edge="1" parent="1" source="zZc-atfyfXBpznImNKL6-1" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="zZc-atfyfXBpznImNKL6-8" value="">
+        <mxCell id="zZc-atfyfXBpznImNKL6-13" edge="1" parent="1" source="zZc-atfyfXBpznImNKL6-1" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;" target="zZc-atfyfXBpznImNKL6-8" value="">
           <mxGeometry height="50" relative="1" width="50" as="geometry">
             <mxPoint x="510" y="440" as="sourcePoint" />
             <mxPoint x="560" y="390" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="zZc-atfyfXBpznImNKL6-16" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="validityTime.end" vertex="1">
-          <mxGeometry height="30" width="60" x="338" y="250" as="geometry" />
-        </mxCell>
-        <mxCell id="zZc-atfyfXBpznImNKL6-18" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Null" vertex="1">
-          <mxGeometry height="30" width="60" x="338" y="270" as="geometry" />
+        <mxCell id="zZc-atfyfXBpznImNKL6-16" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;br&gt;&lt;div&gt;isStorefront True&lt;/div&gt;&lt;div&gt;and&lt;/div&gt;&lt;div style=&quot;&quot;&gt;validityTime.end NULL&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="162" x="100" y="201" as="geometry" />
         </mxCell>
         <mxCell id="zZc-atfyfXBpznImNKL6-20" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="NYCMaps ArcGIS Online" vertex="1">
-          <mxGeometry height="30" width="150" x="338" y="71" as="geometry" />
+          <mxGeometry height="30" width="150" x="452.5" y="71" as="geometry" />
         </mxCell>
-        <mxCell id="zZc-atfyfXBpznImNKL6-22" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="LiveXYZ Group" vertex="1">
-          <mxGeometry height="30" width="120" x="464" y="108" as="geometry" />
+        <mxCell id="zZc-atfyfXBpznImNKL6-22" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="LiveXYZ Auto-Enroll Group" vertex="1">
+          <mxGeometry height="30" width="184" x="198" y="108" as="geometry" />
         </mxCell>
         <mxCell id="zZc-atfyfXBpznImNKL6-23" edge="1" parent="1" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;fillColor=default;" target="zZc-atfyfXBpznImNKL6-5" value="">
           <mxGeometry height="50" relative="1" width="50" as="geometry">
@@ -90,6 +87,48 @@
             <mxPoint x="790" y="660" as="sourcePoint" />
             <mxPoint x="790" y="540" as="targetPoint" />
           </mxGeometry>
+        </mxCell>
+        <mxCell id="-L3-hbtcVNM85D6G1YMr-1" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;rounded=0;" value="&lt;br&gt;&lt;div&gt;isStorefront True&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="162" x="321" y="176" as="geometry" />
+        </mxCell>
+        <mxCell id="4oIRSELW_2kX-hbGP0yb-9" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="selected&lt;div&gt;columns&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="278" y="213" as="geometry" />
+        </mxCell>
+        <mxCell id="4oIRSELW_2kX-hbGP0yb-10" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="170" width="390" x="520" y="131" as="geometry" />
+        </mxCell>
+        <mxCell id="4oIRSELW_2kX-hbGP0yb-11" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="60" width="180" x="532" y="141" as="geometry" />
+        </mxCell>
+        <mxCell id="4oIRSELW_2kX-hbGP0yb-12" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontColor=light-dark(#000000,#66B2FF);fontSize=11;" value="&lt;span style=&quot;font-family: &amp;quot;Mona Sans VF&amp;quot;, -apple-system, BlinkMacSystemFont, &amp;quot;Segoe UI&amp;quot;, &amp;quot;Noto Sans&amp;quot;, Helvetica, Arial, sans-serif, &amp;quot;Apple Color Emoji&amp;quot;, &amp;quot;Segoe UI Emoji&amp;quot;; text-align: start; background-color: rgb(255, 255, 255);&quot;&gt;LiveXYZ_Storefronts_Today_VIP&lt;/span&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="591.5" y="156" as="geometry" />
+        </mxCell>
+        <mxCell id="4oIRSELW_2kX-hbGP0yb-13" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="" vertex="1">
+          <mxGeometry height="60" width="180" x="718" y="141" as="geometry" />
+        </mxCell>
+        <mxCell id="4oIRSELW_2kX-hbGP0yb-14" edge="1" parent="1" source="zZc-atfyfXBpznImNKL6-1" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;" target="4oIRSELW_2kX-hbGP0yb-13" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="780" y="351" as="sourcePoint" />
+            <mxPoint x="980" y="391" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4oIRSELW_2kX-hbGP0yb-15" edge="1" parent="1" source="zZc-atfyfXBpznImNKL6-1" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;" target="4oIRSELW_2kX-hbGP0yb-11" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="410" y="350" as="sourcePoint" />
+            <mxPoint x="980" y="391" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4oIRSELW_2kX-hbGP0yb-16" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;br&gt;&lt;div&gt;isStorefront True&lt;/div&gt;&lt;div&gt;and&lt;/div&gt;&lt;div style=&quot;&quot;&gt;validityTime.end NULL&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="162" x="504" y="193" as="geometry" />
+        </mxCell>
+        <mxCell id="4oIRSELW_2kX-hbGP0yb-17" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="LiveXYZ VIP Group" vertex="1">
+          <mxGeometry height="30" width="184" x="618" y="109" as="geometry" />
+        </mxCell>
+        <mxCell id="4oIRSELW_2kX-hbGP0yb-18" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;rounded=0;" value="&lt;br&gt;&lt;div&gt;isStorefront True&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="162" x="671" y="193" as="geometry" />
+        </mxCell>
+        <mxCell id="4oIRSELW_2kX-hbGP0yb-19" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontColor=light-dark(#000000,#66B2FF);fontSize=11;" value="&lt;span style=&quot;font-family: &amp;quot;Mona Sans VF&amp;quot;, -apple-system, BlinkMacSystemFont, &amp;quot;Segoe UI&amp;quot;, &amp;quot;Noto Sans&amp;quot;, Helvetica, Arial, sans-serif, &amp;quot;Apple Color Emoji&amp;quot;, &amp;quot;Segoe UI Emoji&amp;quot;; text-align: start; background-color: rgb(255, 255, 255);&quot;&gt;LiveXYZ_Storefronts_AllTime_VIP&lt;/span&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="776" y="156" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

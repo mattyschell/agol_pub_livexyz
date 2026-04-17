@@ -30,7 +30,7 @@ The full dataset can be a lot to deal with. To fetch a smaller chunk of data:
 
 ### ArcGIS Online: The Tentative Plan
 
-![ArcGIS Online tentative plan](doc/sketch.png)
+![ArcGIS Online tentative plan](doc/sketch_option1.png)
 
 
 
