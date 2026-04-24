@@ -7,6 +7,11 @@ set GREENITEMID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 set BLUEITEMID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 set VIEWITEMID1=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 set VIEWITEMID2=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+set ENV=xxx
+set BASEPATH=X:\xxx
+rem csv source is out of scope for this batch file
+set BLUECSV=%BASEPATH%\geodatabase-scripts\data\agol_pub_livexyz\livexyz_source_blue_%ENV%.csv
+set GREENCSV=%BASEPATH%\geodatabase-scripts\data\agol_pub_livexyz\livexyz_source_green_%ENV%.csv
 rem set these if not authenticating to ArcGIS Online with ArcGIS Pro
 set NYCMAPSUSER=xxxxxxx.xxx.xxxxxxx
 set NYCMAPSCREDS=xxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -16,7 +21,6 @@ set SMTPFROM=xxxxxxx.xxxxxxxx
 set PROXY=http://xxxxx.xxxxx:xxxx
 set HTTP_PROXY=%PROXY%
 set HTTPS_PROXY=%PROXY%
-set BASEPATH=X:\xxxxxxxxxxxxxx
 REM assumes manual creation of statefile path
 set STATEFILE=%BASEPATH%\geodatabase-scripts\data\agol_pub_livexyz\statefiles\livexyz.json
 set PYTHON1=C:\Progra~1\ArcGIS\Pro\bin\Python\envs\arcgispro-py3\python.exe
@@ -27,21 +31,22 @@ if exist "%PYTHON1%" (
     set PROPY=%PYTHON2%
 ) 
 set AGOLPUB=%BASEPATH%\agol_pub
-set TARGET_COLOR=
-REM Get target (will be "green" or "blue")
-for /f "tokens=*" %%A in (
-  '%PROPY% %AGOLPUB%\src\py\state_manager.py get-target %STATEFILE%'
-) do set TARGET_COLOR=%%A
+if "%TARGET_COLOR%"=="" (
+  REM Get target (will be "green" or "blue")
+  for /f "tokens=*" %%A in (
+    '%PROPY% %AGOLPUB%\src\py\state_manager.py get-target %STATEFILE%'
+  ) do set TARGET_COLOR=%%A
+) else (
+  REM TARGET_COLOR was supplied by caller (for example sample-fetchlivexyz-all.bat)
+)
 echo Target color: %TARGET_COLOR%
 if "%TARGET_COLOR%"=="green" (
   set TARGETITEMID=%GREENITEMID%
+  set CSV=%GREENCSV%
 ) else (
   set TARGETITEMID=%BLUEITEMID%
+  set CSV=%BLUECSV%
 )
-rem the source of this csv is the primary purpose of this repository
-rem the caller of this batch file script should have downloaded the csv 
-rem before the blue green switcheroo
-set CSV=%BASEPATH%\geodatabase-scripts\data\agol_pub_livexyz\livexyz_source.csv
 set TARGETLOGDIR=%BASEPATH%\geodatabase-scripts\logs\agol_pub_livexyz
 set BATLOG=%TARGETLOGDIR%\livexyz-bluegreen_to_%TARGET_COLOR%.log
 set PYTHONPATH0=%PYTHONPATH%

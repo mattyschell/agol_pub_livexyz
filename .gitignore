@@ -12,3 +12,5 @@ prd-*
 *.jsonl
 data/*.csv
 *.code-workspace
+*.bat
+!sample-*.bat

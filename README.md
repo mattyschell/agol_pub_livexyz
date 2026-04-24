@@ -32,9 +32,9 @@ The full dataset can be a lot to deal with. To fetch a smaller chunk of data:
 
 ![ArcGIS Online tentative plan](doc/sketch_option1.png)
 
-### Donnload and Blue Green Rotation
+### Download and Blue Green Rotation
 
-See these two sample scripts.  Script 2 relies on [agol_pub](https://github.com/mattyschell/agol_pub). It demonstrates a blue/green source with 2 dependent views.
+See these two sample scripts. In combination they demonstrate a blue/green source rotation with 2 dependent views. Both parts have dependencies on [agol_pub](https://github.com/mattyschell/agol_pub). 
 
 ```shell
 > geodatabase-scripts\sample-fetchlivexyz-all.bat
