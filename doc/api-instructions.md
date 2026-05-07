@@ -20,6 +20,14 @@ Key: Content-type | Value: application/json
 Key: X-Auth-Token | Value: Bearer USER_TOKEN (replace USER_TOKEN with your unique token)
 User token can be found in the drop-down menu on the Live XYZ Directory (click Api Key)
 
+Service account authentication is also supported:
+
+curl --location --request POST 'https://auth-api.liveapp.com/authentication' \
+--header 'Content-Type: application/json' \
+--data '{"name":"SERVICE_ACCOUNT_NAME","key":"SERVICE_ACCOUNT_KEY"}'
+
+Use the returned `token` value as the Bearer token for X-Auth-Token.
+
 
 Request Body: The request body supports the following parameters:
 

@@ -11,6 +11,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from livexyz_api.graphql_fetcher import LiveXYZFetcher
+from livexyz_api.graphql_fetcher import _looks_like_jwt
+from livexyz_api.graphql_fetcher import _normalize_token
 
 
 LOGGER = logging.getLogger(__name__)
@@ -202,6 +204,41 @@ def _pages_label(max_pages):
     return f"up to {max_pages} pages"
 
 
+def _resolve_auth_inputs():
+    token = _normalize_token(os.getenv("LIVEXYZTOKEN"))
+    service_name = _normalize_token(
+        os.getenv("LIVEXYZ_SERVICE_ACCOUNT_NAME")
+    )
+    service_key = _normalize_token(
+        os.getenv("LIVEXYZ_SERVICE_ACCOUNT_KEY")
+    )
+
+    if service_key and not service_name:
+        raise SystemExit(
+            "LIVEXYZ_SERVICE_ACCOUNT_NAME is required when "
+            "LIVEXYZ_SERVICE_ACCOUNT_KEY is set"
+        )
+
+    if token and not _looks_like_jwt(token):
+        if not service_name:
+            raise SystemExit(
+                "LIVEXYZTOKEN is not a JWT. If using service-account auth, "
+                "set LIVEXYZ_SERVICE_ACCOUNT_NAME and "
+                "LIVEXYZ_SERVICE_ACCOUNT_KEY"
+            )
+        service_key = token
+        token = None
+
+    if not token and not service_key:
+        raise SystemExit(
+            "Set LIVEXYZTOKEN (JWT) or set both "
+            "LIVEXYZ_SERVICE_ACCOUNT_NAME and "
+            "LIVEXYZ_SERVICE_ACCOUNT_KEY"
+        )
+
+    return token, service_name, service_key
+
+
 def _write_jsonl(fetcher
                 ,base_payload
                 ,page_count
@@ -324,19 +361,20 @@ def main():
     output_path.parent.mkdir(parents=True
                             ,exist_ok=True)
 
-    token = os.getenv("LIVEXYZTOKEN")
-    if token:
-        token = token.strip()
-        if token.startswith('"') and token.endswith('"'):
-            token = token[1:-1].strip()
-        if token.lower().startswith("bearer "):
-            token = token[7:].strip()
+    token, service_name, service_key = _resolve_auth_inputs()
 
-    if not token:
-        raise SystemExit(
-            "LIVEXYZTOKEN environment variable is required")
+    if service_key:
+        LOGGER.info(
+            "Authenticating with service account name %s"
+            ,service_name
+        )
+    else:
+        LOGGER.info("Authenticating with JWT token")
 
-    fetcher = LiveXYZFetcher(token)
+    fetcher = LiveXYZFetcher(token
+                            ,None
+                            ,service_name
+                            ,service_key)
 
     base_payload = {}
 

@@ -1,4 +1,7 @@
-set LIVEXYZTOKEN="abc.123"
+set LIVEXYZ_SERVICE_ACCOUNT_NAME="your-service-account-name"
+set LIVEXYZ_SERVICE_ACCOUNT_KEY="your-65-character-service-account-key"
+rem Optional alternative to service-account auth:
+rem set LIVEXYZTOKEN="your-jwt-token"
 set BASEPATH=X:\xxx
 set AGOLPUB=%BASEPATH%\agol_pub
 set STATEFILE=%BASEPATH%\geodatabase-scripts\data\agol_pub_livexyz\statefiles\livexyz.json

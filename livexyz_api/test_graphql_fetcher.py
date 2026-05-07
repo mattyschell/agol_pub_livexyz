@@ -2,12 +2,23 @@ import unittest
 from unittest.mock import patch, MagicMock
 import json
 import datetime
-import os
 from livexyz_api.graphql_fetcher import (
     GraphQLFetcher
     ,LiveXYZFetcher
-    ,_normalize_token
 )
+
+
+def _build_test_jwt(exp_offset_hours=1):
+    future_ts = int((datetime.datetime.utcnow()
+                     + datetime.timedelta(hours=exp_offset_hours))
+                    .timestamp())
+    token_payload = {"exp": future_ts}
+    import base64
+    payload_json = json.dumps(token_payload)
+    payload_b64 = base64.urlsafe_b64encode(
+        payload_json.encode()
+    ).decode().rstrip('=')
+    return f"header.{payload_b64}.signature"
 
 
 class TestGraphQLFetcher(unittest.TestCase):
@@ -66,9 +77,8 @@ class TestLiveXYZFetcher(unittest.TestCase):
     """Tests for LiveXYZFetcher child class."""
 
     def setUp(self):
-        raw_token = os.getenv("LIVEXYZTOKEN")
-        self.token = _normalize_token(raw_token)
-        self.fetcher = LiveXYZFetcher(raw_token)
+        self.token = _build_test_jwt(1)
+        self.fetcher = LiveXYZFetcher(self.token)
 
     def test_init_default_endpoint(self):
         """Test initialization with default LiveXYZ endpoint."""
@@ -83,16 +93,7 @@ class TestLiveXYZFetcher(unittest.TestCase):
 
     def test_is_jwt_token_expired_valid(self):
         """Test with valid (non-expired) token."""
-        # Create a token that expires far in future
-        future_ts = int((datetime.datetime.utcnow() 
-                         + datetime.timedelta(hours=1))
-                        .timestamp())
-        token_payload = {"exp": future_ts}
-        import base64
-        payload_json = json.dumps(token_payload)
-        payload_b64 = base64.urlsafe_b64encode(
-            payload_json.encode()).decode().rstrip('=')
-        token = f"header.{payload_b64}.signature"
+        token = _build_test_jwt(1)
 
         is_expired = self.fetcher._is_jwt_token_expired(token)
         self.assertFalse(is_expired)
@@ -141,6 +142,54 @@ class TestLiveXYZFetcher(unittest.TestCase):
 
         self.assertEqual(result, new_token)
         mock_post.assert_called_once()
+
+    @patch('requests.post')
+    def test_authenticate_service_account_success(self, mock_post):
+        """Service account credentials are exchanged for JWT."""
+        new_token = _build_test_jwt(1)
+        mock_response = MagicMock()
+        mock_response.status_code = 201
+        mock_response.json.return_value = {
+            "name": "ProdSvc"
+           ,"token": new_token
+        }
+        mock_post.return_value = mock_response
+
+        fetcher = LiveXYZFetcher(
+            None
+           ,None
+           ,"ProdSvc"
+           ,"x" * 65
+        )
+
+        self.assertEqual(fetcher.token, new_token)
+        self.assertEqual(
+            fetcher.headers.get("X-Auth-Token")
+           ,f"Bearer {new_token}"
+        )
+
+    @patch('requests.post')
+    def test_init_token_uses_service_key_when_name_present(self, mock_post):
+        """Non-JWT token is treated as key when service name is present."""
+        new_token = _build_test_jwt(1)
+        mock_response = MagicMock()
+        mock_response.status_code = 201
+        mock_response.json.return_value = {
+            "name": "ProdSvc"
+           ,"token": new_token
+        }
+        mock_post.return_value = mock_response
+
+        fetcher = LiveXYZFetcher("x" * 65
+                                ,None
+                                ,"ProdSvc")
+
+        self.assertEqual(fetcher.token, new_token)
+
+    def test_init_non_jwt_without_service_name_fails(self):
+        """Reject plain service keys passed as JWT token."""
+        with self.assertRaises(ValueError):
+            LiveXYZFetcher("x" * 65)
 
     @patch('requests.post')
     def test_refresh_jwt_token_failure(self, mock_post):
