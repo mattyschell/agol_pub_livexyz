@@ -28,4 +28,9 @@ CALL %PROPY% %AGOLPUBLIVEXYZ%\livexyz_api\fetch_livexyz.py ^
              --max_pages %TOTALPAGES% ^
              --output_path %OUTPUT% ^
              --log_path %TARGETLOGDIR%
+if %ERRORLEVEL% NEQ 0 (
+    echo. >> %BATLOG%
+    echo fetchlivexyz-specimen failed >> %BATLOG%
+    EXIT /B 1
+)
 echo. >> %BATLOG% && echo completed sample download to %OUTPUT% on %date% at %time% >> %BATLOG%

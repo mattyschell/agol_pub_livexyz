@@ -361,38 +361,52 @@ def main():
     output_path.parent.mkdir(parents=True
                             ,exist_ok=True)
 
-    token, service_name, service_key = _resolve_auth_inputs()
+    try:
+        token, service_name, service_key = _resolve_auth_inputs()
 
-    if service_key:
+        if service_key:
+            LOGGER.info(
+                "Authenticating with service account name %s"
+                ,service_name
+            )
+        else:
+            LOGGER.info("Authenticating with JWT token")
+
+        fetcher = LiveXYZFetcher(token
+                                ,None
+                                ,service_name
+                                ,service_key)
+
+        token_source = "service-account" if service_key else "jwt-env"
         LOGGER.info(
-            "Authenticating with service account name %s"
-            ,service_name
+            "Auth token diagnostics: source=%s jwt=%s length=%d"
+            ,token_source
+            ,_looks_like_jwt(fetcher.token)
+            ,len(fetcher.token) if fetcher.token else 0
         )
-    else:
-        LOGGER.info("Authenticating with JWT token")
 
-    fetcher = LiveXYZFetcher(token
-                            ,None
-                            ,service_name
-                            ,service_key)
+        base_payload = {}
 
-    base_payload = {}
+        if args.output_format == "csv":
+            _write_csv(fetcher
+                      ,base_payload
+                      ,args.page_count
+                      ,args.max_pages
+                      ,output_path)
+        else:
+            _write_jsonl(fetcher
+                        ,base_payload
+                        ,args.page_count
+                        ,args.max_pages
+                        ,output_path)
 
-    if args.output_format == "csv":
-        _write_csv(fetcher
-                  ,base_payload
-                  ,args.page_count
-                  ,args.max_pages
-                  ,output_path)
-    else:
-        _write_jsonl(fetcher
-                    ,base_payload
-                    ,args.page_count
-                    ,args.max_pages
-                    ,output_path)
+        LOGGER.info("Fetch complete")
+        return 0
 
-    LOGGER.info("Fetch complete")
+    except Exception as exc:
+        LOGGER.error("Fetch failed: %s", exc)
+        return 1
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

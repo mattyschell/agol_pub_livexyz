@@ -337,7 +337,10 @@ class LiveXYZFetcher(GraphQLFetcher):
                         "Response body: %s"
                         ,response.text[:500]
                     )
-                break
+                raise RuntimeError(
+                    "LiveXYZ request failed with status "
+                    f"{response.status_code}"
+                )
 
     def iter_pages(self
                   ,base_payload

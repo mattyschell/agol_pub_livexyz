@@ -47,7 +47,7 @@ if %ERRORLEVEL% NEQ 0 (
     echo. >> %BATLOG%
     echo fetchlivexyz-all failed >> %BATLOG%
     %PROPY% %BASEPATH%\agol_pub\notify.py "LiveXYZ data fetch failed (%ENV%)" %NOTIFY% fetch_livexyz_ %TARGETLOGDIR% %NOTIFYFROM% %SMTPFROM%
-    EXIT /B 0
+    EXIT /B 1
 ) 
 rem testing success notification
 rem %PROPY% %BASEPATH%\agol_pub\notify.py "LiveXYZ data fetch success (%ENV%)" %NOTIFY% fetch_livexyz_ %TARGETLOGDIR% %NOTIFYFROM% %SMTPFROM%
