@@ -1,3 +1,4 @@
+import os
 import unittest
 from unittest.mock import patch, MagicMock
 import json
@@ -5,6 +6,8 @@ import datetime
 from livexyz_api.graphql_fetcher import (
     GraphQLFetcher
     ,LiveXYZFetcher
+    ,AUTH_ENDPOINT
+    ,_looks_like_jwt
 )
 
 
@@ -280,15 +283,88 @@ class TestLiveXYZFetcher(unittest.TestCase):
     def test_fetch_paginated_error_response(self
                                              ,mock_fetch
                                              ,mock_ensure):
-        """Test fetch_paginated stops on error response."""
+        """Test fetch_paginated raises RuntimeError on error response."""
         mock_response = MagicMock()
         mock_response.status_code = 500
+        mock_response.text = ""
         mock_fetch.return_value = mock_response
 
         base_payload = {"test": "data"}
-        pages = list(self.fetcher.fetch_paginated(base_payload))
+        with self.assertRaises(RuntimeError):
+            list(self.fetcher.fetch_paginated(base_payload))
 
-        self.assertEqual(len(pages), 0)
+
+def _sa_creds_present():
+    name = os.environ.get("LIVEXYZ_SERVICE_ACCOUNT_NAME", "").strip()
+    key = os.environ.get("LIVEXYZ_SERVICE_ACCOUNT_KEY", "").strip()
+    return bool(name and key)
+
+
+_SKIP_MSG = (
+    "LIVEXYZ_SERVICE_ACCOUNT_NAME and LIVEXYZ_SERVICE_ACCOUNT_KEY "
+    "not set; skipping live auth tests"
+)
+
+
+@unittest.skipUnless(_sa_creds_present(), _SKIP_MSG)
+class TestLiveAuth(unittest.TestCase):
+    """
+    Integration tests that verify the service account name/key pair
+    can obtain a usable bearer token.
+
+    Skipped unless both LIVEXYZ_SERVICE_ACCOUNT_NAME and
+    LIVEXYZ_SERVICE_ACCOUNT_KEY are set in the environment.
+    """
+
+    def setUp(self):
+        self.name = os.environ["LIVEXYZ_SERVICE_ACCOUNT_NAME"].strip()
+        self.key = os.environ["LIVEXYZ_SERVICE_ACCOUNT_KEY"].strip()
+
+    def test_authenticate_returns_token(self):
+        """POST to auth endpoint returns a non-empty token."""
+        import requests
+        payload = {"name": self.name, "key": self.key}
+        response = requests.post(AUTH_ENDPOINT, json=payload)
+        self.assertIn(
+            response.status_code
+            ,[200, 201]
+            ,f"Auth request failed with {response.status_code}: "
+             f"{response.text}"
+        )
+        data = response.json()
+        token = data.get("token", "").strip()
+        self.assertTrue(token, "Auth response contained no token field")
+
+    def test_authenticate_returns_jwt(self):
+        """Token returned by auth endpoint looks like a JWT."""
+        import requests
+        payload = {"name": self.name, "key": self.key}
+        response = requests.post(AUTH_ENDPOINT, json=payload)
+        self.assertIn(response.status_code, [200, 201])
+        token = response.json().get("token", "").strip()
+        self.assertTrue(
+            _looks_like_jwt(token)
+            ,f"Token does not look like a JWT: {token[:40]}..."
+        )
+
+    def test_token_accepted_by_features_endpoint(self):
+        """Bearer token from auth endpoint is accepted (not 401)."""
+        fetcher = LiveXYZFetcher(None
+                                ,None
+                                ,self.name
+                                ,self.key)
+        response = fetcher.fetch({"pageSize": 1})
+        self.assertNotEqual(
+            response.status_code
+            ,401
+            ,f"Features endpoint rejected the token (401 Invalid token). "
+             f"Response: {response.text}"
+        )
+        self.assertEqual(
+            response.status_code
+            ,200
+            ,f"Unexpected status {response.status_code}: {response.text}"
+        )
 
 
 if __name__ == "__main__":
