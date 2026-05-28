@@ -3,6 +3,7 @@ import unittest
 from unittest.mock import patch, MagicMock
 import json
 import datetime
+import uuid
 from livexyz_api.graphql_fetcher import (
     GraphQLFetcher
     ,LiveXYZFetcher
@@ -22,6 +23,10 @@ def _build_test_jwt(exp_offset_hours=1):
         payload_json.encode()
     ).decode().rstrip('=')
     return f"header.{payload_b64}.signature"
+
+
+def _build_test_org_id():
+    return uuid.uuid4().hex[:24]
 
 
 class TestGraphQLFetcher(unittest.TestCase):
@@ -150,7 +155,7 @@ class TestLiveXYZFetcher(unittest.TestCase):
     def test_authenticate_service_account_success(self, mock_post):
         """Service account credentials are exchanged for JWT."""
         new_token = _build_test_jwt(1)
-        org_id = "69e3001394caf63a8b156b78"
+        org_id = _build_test_org_id()
         mock_response = MagicMock()
         mock_response.status_code = 201
         mock_response.json.return_value = {
@@ -186,7 +191,7 @@ class TestLiveXYZFetcher(unittest.TestCase):
     def test_init_token_uses_service_key_when_name_present(self, mock_post):
         """Non-JWT token is treated as key when service name is present."""
         new_token = _build_test_jwt(1)
-        org_id = "69e3001394caf63a8b156b78"
+        org_id = _build_test_org_id()
         mock_response = MagicMock()
         mock_response.status_code = 201
         mock_response.json.return_value = {
