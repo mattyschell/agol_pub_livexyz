@@ -19,17 +19,19 @@ We fetch all data, including historical records and non-storefronts. We will fro
 Authentication for fetch scripts supports either:
 
 1. `LIVEXYZTOKEN` as a JWT token, or
-2. `LIVEXYZ_SERVICE_ACCOUNT_NAME` + `LIVEXYZ_SERVICE_ACCOUNT_KEY`
+2. `LIVEXYZ_SERVICE_ACCOUNT_NAME` + `LIVEXYZ_SERVICE_ACCOUNT_ORGANIZATIONID` + `LIVEXYZ_SERVICE_ACCOUNT_KEY`
 
 These are environmental variables.
 
-When using a service account, the script exchanges name/key for a JWT at
+When using a service account, the script exchanges name/organization/key
+for a JWT at
 `https://auth-api.liveapp.com/authentication`.
 
 #### Download All
 
 1. Copy sample-fetchlivexyz-all.bat to a new name.  
-2. Get a service account name and key from your administrator.  
+2. Get a service account name, organization ID, and key from your
+  administrator.  
 3. Update the environmentals at the top of the script.
 
 #### Download A Sample
@@ -37,15 +39,16 @@ When using a service account, the script exchanges name/key for a JWT at
 The full dataset can be a lot to deal with. To fetch a smaller chunk of data:
 
 1. Copy sample-fetchlivexyz-specimen.bat to a new name
-2. Get a service account name and key from your administrator.
+2. Get a service account name, organization ID, and key from your
+  administrator.
 3. Update the environmentals LINESPERPAGE and TOTALPAGES to control the specimen size. For example 5 and 5 respectively will yield 25 rows.
 4. Update the other environmentals
 
-### ArcGIS Online: The Tentative Plan
+### ArcGIS Online
 
 The refresh uses the ArcGIS [Item.update()](https://developers.arcgis.com/python/latest/api-reference/arcgis.gis.toc.html#arcgis.gis.Item.update) method and incurs no credits.
 
-![ArcGIS Online tentative plan](doc/sketch_option1.png)
+![ArcGIS Online plan](doc/sketch_option1.png)
 
 ### Download and Blue Green Rotation
 
@@ -58,14 +61,15 @@ See these two sample scripts. In combination they demonstrate a blue/green sourc
 
 ### Test A Service Account 
 
-The service account name and key should be securely stored and used judiciously. 
+The service account name, organization ID, and key should be securely stored
+and used judiciously. 
 
 ```shell
 export HTTP_PROXY=http://xxxx.xxxx:xxxxx
 export HTTPS_PROXY=$HTTP_PROXY
 curl -X POST https://auth-api.liveapp.com/authentication \
   -H "Content-Type: application/json" \
-  -d '{"name": "nameprovidedbysource", "key": "keyprovidedbysource"}'
+  -d '{"name": "nameprovidedbysource", "organizationId": "yourOrgId", "key": "keyprovidedbysource"}'
 ```
 
 Windows cmd-friendly
@@ -75,7 +79,25 @@ set HTTP_PROXY=http://xxxx.xxxx:xxxxx
 set HTTPS_PROXY=%HTTP_PROXY%
 curl -X POST "https://auth-api.liveapp.com/authentication" ^
   -H "Content-Type: application/json" ^
-  -d "{\"name\":\"NameProvidedBySource\",\"key\":\"KeyProvidedBySource\"}"
+  -d "{\"name\":\"NameProvidedBySource\",\"organizationId\":\"yourOrgId\",\"key\":\"KeyProvidedBySource\"}"
+```
+
+Use the returned bearer token to POST to the graphql endpoint.
+
+```shell
+curl -X POST https://graphql-enki.liveapp.com/features/648b1584fe16016869b2415a \
+  -H "Content-Type: application/json" \
+  -H "X-Auth-Token: Bearer YOUR_JWT_TOKEN" \
+  -d '{"pageSize": 1, "validityTime": {"at": "now"}}'
+```
+
+Windows cmd-friendly
+
+```cmd
+curl -X POST "https://graphql-enki.liveapp.com/features/648b1584fe16016869b2415a" ^
+  -H "Content-Type: application/json" ^
+  -H "X-Auth-Token: Bearer YOUR_JWT_TOKEN" ^
+  -d "{\"pageSize\":1,\"validityTime\":{\"at\":\"now\"}}"
 ```
 
 

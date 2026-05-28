@@ -212,10 +212,19 @@ def _resolve_auth_inputs():
     service_key = _normalize_token(
         os.getenv("LIVEXYZ_SERVICE_ACCOUNT_KEY")
     )
+    service_organization_id = _normalize_token(
+        os.getenv("LIVEXYZ_SERVICE_ACCOUNT_ORGANIZATIONID")
+    )
 
     if service_key and not service_name:
         raise SystemExit(
             "LIVEXYZ_SERVICE_ACCOUNT_NAME is required when "
+            "LIVEXYZ_SERVICE_ACCOUNT_KEY is set"
+        )
+
+    if service_key and not service_organization_id:
+        raise SystemExit(
+            "LIVEXYZ_SERVICE_ACCOUNT_ORGANIZATIONID is required when "
             "LIVEXYZ_SERVICE_ACCOUNT_KEY is set"
         )
 
@@ -224,7 +233,15 @@ def _resolve_auth_inputs():
             raise SystemExit(
                 "LIVEXYZTOKEN is not a JWT. If using service-account auth, "
                 "set LIVEXYZ_SERVICE_ACCOUNT_NAME and "
-                "LIVEXYZ_SERVICE_ACCOUNT_KEY"
+                "LIVEXYZ_SERVICE_ACCOUNT_KEY and "
+                "LIVEXYZ_SERVICE_ACCOUNT_ORGANIZATIONID"
+            )
+        if not service_organization_id:
+            raise SystemExit(
+                "LIVEXYZTOKEN is not a JWT. If using service-account auth, "
+                "set LIVEXYZ_SERVICE_ACCOUNT_NAME and "
+                "LIVEXYZ_SERVICE_ACCOUNT_KEY and "
+                "LIVEXYZ_SERVICE_ACCOUNT_ORGANIZATIONID"
             )
         service_key = token
         token = None
@@ -233,10 +250,11 @@ def _resolve_auth_inputs():
         raise SystemExit(
             "Set LIVEXYZTOKEN (JWT) or set both "
             "LIVEXYZ_SERVICE_ACCOUNT_NAME and "
-            "LIVEXYZ_SERVICE_ACCOUNT_KEY"
+            "LIVEXYZ_SERVICE_ACCOUNT_KEY and "
+            "LIVEXYZ_SERVICE_ACCOUNT_ORGANIZATIONID"
         )
 
-    return token, service_name, service_key
+    return token, service_name, service_key, service_organization_id
 
 
 def _write_jsonl(fetcher
@@ -362,7 +380,12 @@ def main():
                             ,exist_ok=True)
 
     try:
-        token, service_name, service_key = _resolve_auth_inputs()
+        (
+            token
+           ,service_name
+           ,service_key
+           ,service_organization_id
+        ) = _resolve_auth_inputs()
 
         if service_key:
             LOGGER.info(
@@ -375,7 +398,8 @@ def main():
         fetcher = LiveXYZFetcher(token
                                 ,None
                                 ,service_name
-                                ,service_key)
+                                ,service_key
+                                ,service_organization_id)
 
         token_source = "service-account" if service_key else "jwt-env"
         LOGGER.info(

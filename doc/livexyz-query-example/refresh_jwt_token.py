@@ -2,10 +2,15 @@ import requests
 
 
 def authenticate_service_account(name: str
+                                ,organization_id: str
                                 ,key: str) -> str:
-    """Exchange service account name/key for a JWT token."""
+    """Exchange service account credentials for a JWT token."""
     response = requests.post("https://auth-api.liveapp.com/authentication"
-                            ,json={"name": name, "key": key})
+                            ,json={
+                                "name": name
+                               ,"organizationId": organization_id
+                               ,"key": key
+                            })
 
     if response.status_code not in (200, 201):
         raise RuntimeError(

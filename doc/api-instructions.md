@@ -24,7 +24,7 @@ Service account authentication is also supported:
 
 curl --location --request POST 'https://auth-api.liveapp.com/authentication' \
 --header 'Content-Type: application/json' \
---data '{"name":"SERVICE_ACCOUNT_NAME","key":"SERVICE_ACCOUNT_KEY"}'
+--data '{"name":"SERVICE_ACCOUNT_NAME","organizationId":"SERVICE_ACCOUNT_ORGANIZATION_ID","key":"SERVICE_ACCOUNT_KEY"}'
 
 Use the returned `token` value as the Bearer token for X-Auth-Token.
 

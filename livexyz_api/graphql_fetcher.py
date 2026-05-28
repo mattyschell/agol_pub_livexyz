@@ -76,7 +76,8 @@ class LiveXYZFetcher(GraphQLFetcher):
                 ,token=None
                 ,endpoint=None
                 ,service_account_name=None
-                ,service_account_key=None):
+                ,service_account_key=None
+                ,service_account_organization_id=None):
         """
         Initialize with JWT token and optional endpoint.
 
@@ -84,6 +85,7 @@ class LiveXYZFetcher(GraphQLFetcher):
         :param endpoint: API endpoint, defaults to LiveXYZ features endpoint
         :param service_account_name: Service account name for key auth
         :param service_account_key: Service account key for key auth
+        :param service_account_organization_id: Org ID for key auth
         """
         if endpoint is None:
             endpoint = "https://graphql-enki.liveapp.com/features/648b1584fe16016869b2415a"
@@ -92,64 +94,84 @@ class LiveXYZFetcher(GraphQLFetcher):
 
         service_account_name = _normalize_token(service_account_name)
         service_account_key = _normalize_token(service_account_key)
+        service_account_organization_id = _normalize_token(
+            service_account_organization_id
+        )
 
-        if service_account_key and not service_account_name:
+        if (
+            service_account_name
+            and token
+            and not service_account_key
+            and not _looks_like_jwt(token)
+        ):
+            service_account_key = token
+            token = None
+
+        if service_account_key and (
+            not service_account_name
+            or not service_account_organization_id
+        ):
             raise ValueError(
-                "Service account name is required when key is provided"
+                "Service account name and organization id are required "
+                "when key is provided"
             )
 
         self.service_account_name = service_account_name
         self.service_account_key = service_account_key
-
-        if service_account_name and token and not service_account_key:
-            if not _looks_like_jwt(token):
-                self.service_account_key = token
-                token = None
+        self.service_account_organization_id = (
+            service_account_organization_id
+        )
 
         if not token and self.service_account_key:
             token = self._authenticate_service_account(
                 self.service_account_name
                ,self.service_account_key
+               ,self.service_account_organization_id
             )
 
         if token and not _looks_like_jwt(token):
             raise ValueError(
                 "Expected JWT token; for service keys set both "
                 "LIVEXYZ_SERVICE_ACCOUNT_NAME and "
-                "LIVEXYZ_SERVICE_ACCOUNT_KEY"
+                "LIVEXYZ_SERVICE_ACCOUNT_KEY and "
+                "LIVEXYZ_SERVICE_ACCOUNT_ORGANIZATIONID"
             )
 
         if not token:
             raise ValueError(
                 "A JWT token or service account credentials are required"
             )
-        
+
         super().__init__(endpoint
                         ,{"X-Auth-Token": f"Bearer {token}"})
-        
+
         self.token = token
 
     def _authenticate_service_account(self
                                      ,name
-                                     ,key):
+                                     ,key
+                                     ,organization_id):
         """
         Exchange service account credentials for a JWT.
 
         :param name: Service account name
         :param key: Service account key
+                :param organization_id: Service account organization id
         :return: JWT token string
         """
         payload = {
             "name": name
-           ,"key": key
+                     ,"key": key
+                     ,"organizationId": organization_id
         }
         response = requests.post(AUTH_ENDPOINT
                                 ,json=payload)
 
         if response.status_code not in (200, 201):
+            response_text = (response.text or "").strip()
             raise Exception(
                 "Failed to authenticate service account: "
-                f"{response.status_code}"
+                f"{response.status_code}: {response_text}"
             )
 
         data = response.json()
@@ -231,6 +253,7 @@ class LiveXYZFetcher(GraphQLFetcher):
                 self.token = self._authenticate_service_account(
                     self.service_account_name
                    ,self.service_account_key
+                   ,self.service_account_organization_id
                 )
             self.headers["X-Auth-Token"] = f"Bearer {self.token}"
 

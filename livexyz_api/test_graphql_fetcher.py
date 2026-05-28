@@ -150,6 +150,7 @@ class TestLiveXYZFetcher(unittest.TestCase):
     def test_authenticate_service_account_success(self, mock_post):
         """Service account credentials are exchanged for JWT."""
         new_token = _build_test_jwt(1)
+        org_id = "69e3001394caf63a8b156b78"
         mock_response = MagicMock()
         mock_response.status_code = 201
         mock_response.json.return_value = {
@@ -163,6 +164,16 @@ class TestLiveXYZFetcher(unittest.TestCase):
            ,None
            ,"ProdSvc"
            ,"x" * 65
+           ,org_id
+        )
+
+        mock_post.assert_called_once_with(
+            AUTH_ENDPOINT
+            ,json={
+                "name": "ProdSvc"
+               ,"key": "x" * 65
+               ,"organizationId": org_id
+            }
         )
 
         self.assertEqual(fetcher.token, new_token)
@@ -175,6 +186,7 @@ class TestLiveXYZFetcher(unittest.TestCase):
     def test_init_token_uses_service_key_when_name_present(self, mock_post):
         """Non-JWT token is treated as key when service name is present."""
         new_token = _build_test_jwt(1)
+        org_id = "69e3001394caf63a8b156b78"
         mock_response = MagicMock()
         mock_response.status_code = 201
         mock_response.json.return_value = {
@@ -185,9 +197,19 @@ class TestLiveXYZFetcher(unittest.TestCase):
 
         fetcher = LiveXYZFetcher("x" * 65
                                 ,None
-                                ,"ProdSvc")
+                                ,"ProdSvc"
+                                ,None
+                                ,org_id)
 
         self.assertEqual(fetcher.token, new_token)
+
+    def test_init_service_key_without_org_id_fails(self):
+        """Service account key auth requires organization id."""
+        with self.assertRaises(ValueError):
+            LiveXYZFetcher(None
+                          ,None
+                          ,"ProdSvc"
+                          ,"x" * 65)
 
     def test_init_non_jwt_without_service_name_fails(self):
         """Reject plain service keys passed as JWT token."""
@@ -297,11 +319,16 @@ class TestLiveXYZFetcher(unittest.TestCase):
 def _sa_creds_present():
     name = os.environ.get("LIVEXYZ_SERVICE_ACCOUNT_NAME", "").strip()
     key = os.environ.get("LIVEXYZ_SERVICE_ACCOUNT_KEY", "").strip()
-    return bool(name and key)
+    organization_id = os.environ.get(
+        "LIVEXYZ_SERVICE_ACCOUNT_ORGANIZATIONID"
+        ,""
+    ).strip()
+    return bool(name and key and organization_id)
 
 
 _SKIP_MSG = (
-    "LIVEXYZ_SERVICE_ACCOUNT_NAME and LIVEXYZ_SERVICE_ACCOUNT_KEY "
+    "LIVEXYZ_SERVICE_ACCOUNT_NAME, LIVEXYZ_SERVICE_ACCOUNT_KEY, "
+    "and LIVEXYZ_SERVICE_ACCOUNT_ORGANIZATIONID "
     "not set; skipping live auth tests"
 )
 
@@ -309,21 +336,29 @@ _SKIP_MSG = (
 @unittest.skipUnless(_sa_creds_present(), _SKIP_MSG)
 class TestLiveAuth(unittest.TestCase):
     """
-    Integration tests that verify the service account name/key pair
+    Integration tests that verify the service account credentials
     can obtain a usable bearer token.
 
-    Skipped unless both LIVEXYZ_SERVICE_ACCOUNT_NAME and
-    LIVEXYZ_SERVICE_ACCOUNT_KEY are set in the environment.
+    Skipped unless LIVEXYZ_SERVICE_ACCOUNT_NAME,
+    LIVEXYZ_SERVICE_ACCOUNT_KEY, and
+    LIVEXYZ_SERVICE_ACCOUNT_ORGANIZATIONID are set in the environment.
     """
 
     def setUp(self):
         self.name = os.environ["LIVEXYZ_SERVICE_ACCOUNT_NAME"].strip()
         self.key = os.environ["LIVEXYZ_SERVICE_ACCOUNT_KEY"].strip()
+        self.organization_id = os.environ[
+            "LIVEXYZ_SERVICE_ACCOUNT_ORGANIZATIONID"
+        ].strip()
 
     def test_authenticate_returns_token(self):
         """POST to auth endpoint returns a non-empty token."""
         import requests
-        payload = {"name": self.name, "key": self.key}
+        payload = {
+            "name": self.name
+           ,"key": self.key
+           ,"organizationId": self.organization_id
+        }
         response = requests.post(AUTH_ENDPOINT, json=payload)
         self.assertIn(
             response.status_code
@@ -338,7 +373,11 @@ class TestLiveAuth(unittest.TestCase):
     def test_authenticate_returns_jwt(self):
         """Token returned by auth endpoint looks like a JWT."""
         import requests
-        payload = {"name": self.name, "key": self.key}
+        payload = {
+            "name": self.name
+           ,"key": self.key
+           ,"organizationId": self.organization_id
+        }
         response = requests.post(AUTH_ENDPOINT, json=payload)
         self.assertIn(response.status_code, [200, 201])
         token = response.json().get("token", "").strip()
@@ -352,7 +391,8 @@ class TestLiveAuth(unittest.TestCase):
         fetcher = LiveXYZFetcher(None
                                 ,None
                                 ,self.name
-                                ,self.key)
+                                ,self.key
+                                ,self.organization_id)
         response = fetcher.fetch({"pageSize": 1})
         self.assertNotEqual(
             response.status_code

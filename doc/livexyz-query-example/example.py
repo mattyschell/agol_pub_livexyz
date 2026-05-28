@@ -17,8 +17,10 @@ cursor = None
 
 # Option 2: Exchange service-account credentials for a JWT token
 service_account_name = "your_service_account_name"
+service_account_organization_id = "your_organization_id"
 service_account_key = "your_65_char_service_account_key"
 token = authenticate_service_account(service_account_name
+                                    ,service_account_organization_id
                                     ,service_account_key)
 while True:
 

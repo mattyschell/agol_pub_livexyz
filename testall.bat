@@ -3,9 +3,10 @@ set HTTPS_PROXY=http://xxxx.xxx:xxxx
 set http_proxy=%HTTP_PROXY%
 set https_proxy=%HTTP_PROXY%
 rem if empty all will be mocked
-rem add a real name and key to integration test
-set LIVEXYZ_SERVICE_ACCOUNT_NAME=
-set LIVEXYZ_SERVICE_ACCOUNT_KEY=
+rem add a real name, organizationId, and key to integration test
+set LIVEXYZ_SERVICE_ACCOUNT_NAME=notrealname
+set LIVEXYZ_SERVICE_ACCOUNT_ORGANIZATIONID=123456789abc
+set LIVEXYZ_SERVICE_ACCOUNT_KEY=123456789abc123456789abc
 rem Optional alternative to service-account auth:
 rem set LIVEXYZTOKEN=your-jwt-token
 set PYTHON1=C:\Progra~1\ArcGIS\Pro\bin\Python\envs\arcgispro-py3\python.exe
@@ -15,4 +16,8 @@ if exist "%PYTHON1%" (
 ) else if exist "%PYTHON2%" (
     set PROPY=%PYTHON2%
 ) 
+CALL %PROPY% -m unittest livexyz_api.test_graphql_fetcher -v
+set LIVEXYZ_SERVICE_ACCOUNT_NAME=
+set LIVEXYZ_SERVICE_ACCOUNT_ORGANIZATIONID=
+set LIVEXYZ_SERVICE_ACCOUNT_KEY=
 CALL %PROPY% -m unittest livexyz_api.test_graphql_fetcher -v
