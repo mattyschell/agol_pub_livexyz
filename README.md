@@ -54,10 +54,13 @@ The refresh uses the ArcGIS [Item.update()](https://developers.arcgis.com/python
 
 See these two sample scripts. In combination they demonstrate a blue/green source rotation with 2 dependent views. Both parts have dependencies on [agol_pub](https://github.com/mattyschell/agol_pub). 
 
+See geodatabase-scripts\sample-livexyz-refresh.bat for the full download, load, swap, and QA workflow.  How much time does the full refresh take? Approximately 20 minutes. 
+
 ```shell
 > geodatabase-scripts\sample-fetchlivexyz-all.bat
 > geodatabase-scripts\sample-bluegreen.bat
 ```
+
 
 ### Test A Service Account 
 
@@ -98,6 +101,42 @@ curl -X POST "https://graphql-enki.liveapp.com/features/648b1584fe16016869b2415a
   -H "Content-Type: application/json" ^
   -H "X-Auth-Token: Bearer YOUR_JWT_TOKEN" ^
   -d "{\"pageSize\":1,\"validityTime\":{\"at\":\"now\"}}"
+```
+
+### Filter Group Report CSV
+
+Use filter_group_report.py to post-process the comma-delimited output from
+agol_pub group-members-report.py.
+
+The script keeps only rows where a target column does not match a glob
+pattern.
+
+Rows are written only when none of the checked columns match the pattern.
+If the pattern is found in one or more checked columns, that row is filtered.
+
+Defaults:
+
+1. Columns are username and user.email
+2. Pattern is *.nyc.gov*
+3. Output directory is the input file directory
+
+Output file name format:
+
+1. livexyz-group-report-YYYYMMDD-HHMMSS.csv
+
+If no rows are selected, the output file is created as a 0-byte file.
+
+Usage:
+
+```shell
+python filter_group_report.py <infile.csv> [--outdir DIR] [--columns COL [COL ...]] [--pattern GLOB]
+```
+
+Examples:
+
+```shell
+python filter_group_report.py C:\temp\livexyz-group-report.csv
+python filter_group_report.py C:\temp\livexyz-group-report.csv --columns username user.email --pattern "*.nyc.gov*" --outdir C:\temp
 ```
 
 
