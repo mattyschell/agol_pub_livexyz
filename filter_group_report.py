@@ -75,7 +75,7 @@ def _output_path(infile
     timestr = time.strftime('%Y%m%d-%H%M%S')
 
     return os.path.join(outdir
-                       ,'livexyz-group-report-{0}.csv'.format(timestr))
+                       ,'livexyz-group-report-{0}.log'.format(timestr))
 
 
 def _write_output(outfile
@@ -83,20 +83,44 @@ def _write_output(outfile
                  ,rows):
 
     if not rows:
-        # No matching rows: write an empty (0-byte) file.
-        open(outfile
-            ,'w'
-            ,encoding='utf-8').close()
+        with open(outfile
+                 ,'w'
+                 ,encoding='utf-8') as f:
+            f.write('\nNo suspect users to report\n\n')
         return
+
+    label_width = max(len(column) for column in header)
 
     with open(outfile
              ,'w'
-             ,newline=''
              ,encoding='utf-8') as f:
-        writer = csv.writer(f
-                           ,lineterminator='\n')
-        writer.writerow(header)
-        writer.writerows(rows)
+        f.write('LiveXYZ Group Report - Filtered Results\n')
+        f.write('{0}\n'.format('=' * 72))
+        f.write('Suspect users found: {0}\n'.format(len(rows)))
+        f.write('{0}\n\n'.format('=' * 72))
+
+        for index, row in enumerate(rows
+                                   ,start=1):
+            # Fill short rows so every header column prints a value.
+            normalized_row = row[:len(header)] + [''] * max(
+                0
+               ,len(header) - len(row))
+
+            f.write('User {0}\n'.format(index))
+            f.write('{0}\n'.format('-' * 72))
+
+            for column, value in zip(header
+                                    ,normalized_row):
+                safe_value = value.strip() if value else ''
+                if not safe_value:
+                    safe_value = '(blank)'
+
+                f.write('{0:<{1}} : {2}\n'.format(
+                    column
+                   ,label_width
+                   ,safe_value))
+
+            f.write('\n')
 
 
 def main():
