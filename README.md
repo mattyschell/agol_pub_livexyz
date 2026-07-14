@@ -108,35 +108,125 @@ curl -X POST "https://graphql-enki.liveapp.com/features/648b1584fe16016869b2415a
 Use filter_group_report.py to post-process the comma-delimited output from
 agol_pub group-members-report.py.
 
-The script keeps only rows where a target column does not match a glob
-pattern.
+What the script writes to output:
 
-Rows are written only when none of the checked columns match the pattern.
-If the pattern is found in one or more checked columns, that row is filtered.
+1. Rows where none of the checked columns match the allowed-domain patterns
+2. Rows with blank user.email only when username/email do not match patterns
+
+Filter order for each row:
+
+1. If username is in allowlist, skip the row
+2. Check each selected column against each glob pattern
+3. If any selected column matches any pattern, skip the row
+4. If user.email is blank and no pattern matched, write the row as suspect
+5. If no selected columns match, write the row as suspect
+
+Important rule:
+
+1. Users with *nyc.gov* in username or user.email are treated as allowed
+2. This includes LDAP-style usernames like me@agency.nyc.gov_nyc
 
 Defaults:
 
-1. Columns are username and user.email
-2. Pattern is *.nyc.gov*
-3. Output directory is the input file directory
+1. Columns: username and user.email
+2. Patterns: *nyc.gov* and *nypd.org*
+3. Allowlist: empty
+4. Output directory: same directory as input CSV
 
 Output file name format:
 
 1. livexyz-group-report-YYYYMMDD-HHMMSS.csv
 
-If no rows are selected, the output file is created as a 0-byte file.
+If no suspect rows are found, the output file is created as a 0-byte file.
 
 Usage:
 
 ```shell
-python filter_group_report.py <infile.csv> [--outdir DIR] [--columns COL [COL ...]] [--pattern GLOB]
+python filter_group_report.py <infile.csv> \
+  [--outdir DIR] \
+  [--columns COL [COL ...]] \
+  [--patterns GLOB [GLOB ...]] \
+  [--allowlist-file FILE]
 ```
 
 Examples:
 
+1. Run with defaults:
+
 ```shell
 python filter_group_report.py C:\temp\livexyz-group-report.csv
-python filter_group_report.py C:\temp\livexyz-group-report.csv --columns username user.email --pattern "*.nyc.gov*" --outdir C:\temp
+```
+
+2. Use custom columns, patterns, and output directory:
+
+```shell
+python filter_group_report.py C:\temp\livexyz-group-report.csv \
+  --columns username user.email \
+  --patterns "*nyc.gov*" "*nypd.org*" \
+  --outdir C:\temp
+```
+
+3. Exempt known-good blank-email users with an allowlist:
+
+```shell
+python filter_group_report.py C:\temp\livexyz-group-report.csv \
+  --allowlist-file C:\temp\livexyz-group-report-allowlist.txt
+```
+
+Allowlist file format:
+
+1. One username per line
+2. Case-insensitive matching
+3. Blank lines and lines starting with # are ignored
+
+Example allowlist file (livexyz-group-report-allowlist.txt):
+
+```text
+# Known-good service/partner accounts with blank user.email
+headless.user
+internal.blank@agency.nyc.gov_nyc
+```
+
+Expected output walkthrough:
+
+Input CSV rows (username, user.email):
+
+```text
+employee.user,employee@agency.nyc.gov
+external.user,ext@example.com
+headless.user,
+```
+
+Run without allowlist:
+
+```shell
+python filter_group_report.py C:\temp\livexyz-group-report.csv
+```
+
+Expected suspect rows written:
+
+```text
+external.user,ext@example.com
+headless.user,
+```
+
+Why:
+
+1. employee.user is filtered out because it matches *nyc.gov*
+2. external.user is written because it does not match allowed patterns
+3. headless.user is written because blank user.email did not match patterns
+
+Run with allowlist containing headless.user:
+
+```shell
+python filter_group_report.py C:\temp\livexyz-group-report.csv \
+  --allowlist-file C:\temp\livexyz-group-report-allowlist.txt
+```
+
+Expected suspect rows written:
+
+```text
+external.user,ext@example.com
 ```
 
 

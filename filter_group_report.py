@@ -40,13 +40,36 @@ def _column_indices(header
 def _excluded_rows(header
                   ,data_rows
                   ,columns
-                  ,pattern):
+                  ,patterns
+                  ,allow_usernames=None):
 
     indices = _column_indices(header
                              ,columns)
 
+    if allow_usernames is None:
+        allow_usernames = set()
+
+    username_index = None
+    try:
+        username_index = header.index('username')
+    except ValueError:
+        pass
+
+    email_index = None
+    try:
+        email_index = header.index('user.email')
+    except ValueError:
+        pass
+
     excluded = []
     for row in data_rows:
+        username_value = ''
+        if username_index is not None and username_index < len(row):
+            username_value = row[username_index].strip().lower()
+
+        if username_value in allow_usernames:
+            continue
+
         matched = False
         for index in indices:
             if index >= len(row):
@@ -54,16 +77,52 @@ def _excluded_rows(header
             else:
                 value = row[index]
 
-            if fnmatch.fnmatch(value
-                              ,pattern):
-                matched = True
+            for pattern in patterns:
+                if fnmatch.fnmatch(value
+                                  ,pattern):
+                    matched = True
+                    break
+
+            if matched:
                 break
 
+        # Keep allowed-domain matches out of suspect output.
+        if matched:
+            continue
+
+        # Blank user.email is suspect only when row did not match patterns.
+        if email_index is not None:
+            email_value = ''
+            if email_index < len(row):
+                email_value = row[email_index]
+            if not email_value.strip():
+                excluded.append(row)
+                continue
+
         # Keep only rows where no checked column matches the pattern.
-        if not matched:
-            excluded.append(row)
+        excluded.append(row)
 
     return excluded
+
+
+def _load_allow_usernames(allowlist_file):
+
+    if allowlist_file is None:
+        return set()
+
+    usernames = set()
+    with open(allowlist_file
+             ,'r'
+             ,encoding='utf-8') as f:
+        for raw_line in f:
+            value = raw_line.strip()
+            if not value:
+                continue
+            if value.startswith('#'):
+                continue
+            usernames.add(value.lower())
+
+    return usernames
 
 
 def _output_path(infile
@@ -142,9 +201,17 @@ def main():
                        ,help=(
                             'Columns to check '
                             '(default: username user.email)'))
-    parser.add_argument('--pattern'
-                       ,default='*.nyc.gov*'
-                       ,help='Glob pattern to exclude (default: *.nyc.gov*)')
+    parser.add_argument('--patterns'
+                       ,nargs='+'
+                       ,default=['*nyc.gov*', '*nypd.org*']
+                       ,help=(
+                            'Glob patterns to exclude '
+                           '(default: *nyc.gov* *nypd.org*)'))
+    parser.add_argument('--allowlist-file'
+                       ,default=None
+                       ,help=(
+                           'Optional file with usernames to suppress '
+                           'from suspect output'))
 
     args = parser.parse_args()
 
@@ -155,10 +222,13 @@ def main():
             raise ValueError(
                 'Input report {0} is empty'.format(args.infile))
 
+        allow_usernames = _load_allow_usernames(args.allowlist_file)
+
         excluded = _excluded_rows(header
                                  ,data_rows
                                  ,args.columns
-                                 ,args.pattern)
+                                 ,args.patterns
+                                 ,allow_usernames)
 
         outfile = _output_path(args.infile
                               ,args.outdir)

@@ -4,6 +4,7 @@ set NYCMAPSUSER=xxxxxxxxxx
 set NYCMAPSCREDS=xxxxxxxxx
 set TARGETLOGDIR=%BASEPATH%\geodatabase-scripts\logs\agol_pub_livexyz
 set REPORTFILE=%TARGETLOGDIR%\livexyz-group-report.csv 
+set ALLOWLIST=%BASEPATH%\geodatabase-scripts\livexyz-group-report-allowlist.txt
 set NOTIFY=xxx@xxx.xxx.xxx
 set NOTIFYFROM=xxx@xxx.xxx.xxx
 set SMTPFROM=xxxx.xxx
@@ -28,7 +29,7 @@ if errorlevel 1 (
   exit /b 1
 )
 echo. >> %BATLOG% && echo filtering group report to timestamped csv in %TARGETLOGDIR% >> %BATLOG%
-%PROPY% %BASEPATH%\agol_pub_livexyz\filter_group_report.py %REPORTFILE%
+%PROPY% %BASEPATH%\agol_pub_livexyz\filter_group_report.py %REPORTFILE% --allowlist-file %ALLOWLIST%
 if errorlevel 1 (
   echo. >> %BATLOG% && echo filtering group report failed >> %BATLOG%
   echo
