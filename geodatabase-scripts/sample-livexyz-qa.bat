@@ -2,6 +2,7 @@ set ITEMID=whywasthe6scaredbecause789
 set MINROWS=400000
 set MAXROWS=500000
 set BASEPATH=X:\xxxxxxxxxxxxxx
+set ENV=stg
 set NOTIFY=xxxxxxxxx@xxxxx.xxxxxx.xxx
 set NOTIFYFROM=xxxxxxxxxxx@xxxx.xxx.xxx
 set SMTPFROM=xxxxxxxx.xxxxxxxxx
@@ -26,7 +27,7 @@ echo starting qa of %ITEMID% on %date% at %time% > %BATLOG%
     echo. >> %BATLOG% && echo PASSED: qa of LiveXYZ item %ITEMID% on %date% at %time% >> %BATLOG%
 ) || (
     echo. >> %BATLOG% && echo FAILED: qa of LiveXYZ item %ITEMID% on %date% at %time% >> %BATLOG%
-    %PROPY% %AGOLPUB%\notify.py "Failed QA of LiveXYZ item %ITEMID%" %NOTIFY% "qa-livexyz-"
+    %PROPY% %AGOLPUB%\notify.py "(%ENV%) Failed QA of LiveXYZ item %ITEMID%" %NOTIFY% "qa-livexyz-"
 ) 
 echo. >> %BATLOG% && echo completed qa %ITEMID% on %date% at %time% >> %BATLOG%
 set PYTHONPATH=%PYTHONPATH0% 
