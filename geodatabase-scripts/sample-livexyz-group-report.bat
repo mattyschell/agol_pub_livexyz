@@ -1,5 +1,7 @@
+@echo off
 set BASEPATH=X:\xxx
 set GROUPID=xxxxxxxxxxx
+set ENV=xxx
 set NYCMAPSUSER=xxxxxxxxxx  
 set NYCMAPSCREDS=xxxxxxxxx
 set TARGETLOGDIR=%BASEPATH%\geodatabase-scripts\logs\agol_pub_livexyz
@@ -24,7 +26,7 @@ echo writing full group report for %GROUPID% to %REPORTFILE% > %BATLOG%
 if errorlevel 1 (
   echo. >> %BATLOG% && echo group members report failed >> %BATLOG%
   echo
-  %PROPY% %BASEPATH%\agol_pub\notify.py "Failed to write livexyz group report for %GROUPID%" %NOTIFY% "*"
+  %PROPY% %BASEPATH%\agol_pub\notify.py "(%ENV%) Failed to write livexyz group report for %GROUPID%" %NOTIFY% "*"
   set PYTHONPATH=%PYTHONPATH0%
   exit /b 1
 )
@@ -33,9 +35,9 @@ echo. >> %BATLOG% && echo filtering group report to timestamped csv in %TARGETLO
 if errorlevel 1 (
   echo. >> %BATLOG% && echo filtering group report failed >> %BATLOG%
   echo
-  %PROPY% %BASEPATH%\agol_pub\notify.py "Failed to filter livexyz group report for %GROUPID%" %NOTIFY% "*"
+  %PROPY% %BASEPATH%\agol_pub\notify.py "(%ENV%) Failed to filter livexyz group report for %GROUPID%" %NOTIFY% "*"
   set PYTHONPATH=%PYTHONPATH0%
   exit /b 1
 )
-%PROPY% %BASEPATH%\agol_pub\notify.py "LiveXYZ Group Report for %GROUPID%" %NOTIFY% "livexyz-group-report-2"
+%PROPY% %BASEPATH%\agol_pub\notify.py "(%ENV%) LiveXYZ Group Report for %GROUPID%" %NOTIFY% "livexyz-group-report-2"
 echo. >> %BATLOG% && echo completed livexyz group reporting. >> %BATLOG%
